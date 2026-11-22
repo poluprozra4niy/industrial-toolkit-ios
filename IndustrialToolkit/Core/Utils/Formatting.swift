@@ -21,6 +21,12 @@ enum Fmt {
         if value.isInfinite { return value < 0 ? "−∞" : "+∞" }
         return value.description
     }
+
+    static func double(_ value: Double) -> String {
+        if value.isNaN { return "NaN" }
+        if value.isInfinite { return value < 0 ? "−∞" : "+∞" }
+        return value.description
+    }
 }
 
 extension BinaryInteger {

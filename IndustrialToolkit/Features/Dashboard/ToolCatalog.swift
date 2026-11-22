@@ -68,7 +68,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     /// Must match the implemented branches in `ToolDestination`.
     var isAvailable: Bool {
         switch self {
-        case .voltageDrop, .signalScaling, .ieee754, .commissioningChecklist, .notebook: true
+        case .voltageDrop, .signalScaling, .ieee754, .modbusRegisters, .commissioningChecklist, .notebook: true
         default: false
         }
     }
@@ -101,7 +101,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .breakers: "Номиналы и времятоковые кривые"
         case .signalScaling: "4–20 мА, 0–10 В ↔ величина ↔ код АЦП"
         case .ieee754: "Float ↔ HEX ↔ регистры, порядок байт"
-        case .modbusRegisters: "INT16/32, слова, Big/Little-endian"
+        case .modbusRegisters: "INT16…FLOAT64, порядок слов, адресация 4xxxx"
         case .sensorTables: "ТХА, ТХК, Pt100, Pt1000"
         case .pidTuning: "Метод Циглера–Николса"
         case .ipRating: "Расшифровка IPxx"
@@ -134,7 +134,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .signalScaling: ["4-20", "ма", "ацп", "шкала", "namur", "аналог", "s7", "27648"]
         case .ieee754: ["float", "hex", "modbus", "плк", "плавающ", "abcd", "cdab", "endian"]
-        case .modbusRegisters: ["int", "word", "dword", "endian"]
+        case .modbusRegisters: ["int", "word", "dword", "endian", "40001", "holding", "адрес", "uint64", "double"]
         case .sensorTables: ["pt100", "pt1000", "термопар", "температур"]
         case .cableSizing: ["кабель", "медь", "алюмин"]
         case .voltageDrop: ["кабель", "медь", "алюмин", "потери", "линия", "du", "24 в"]

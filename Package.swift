@@ -18,6 +18,7 @@ let package = Package(
                 "Features/Electrical/VoltageDrop.swift",
                 "Features/Checklist/ChecklistTemplates.swift",
                 "Features/Checklist/ChecklistReport.swift",
+                "Features/Modbus/ModbusCodec.swift",
             ]
         ),
         .testTarget(

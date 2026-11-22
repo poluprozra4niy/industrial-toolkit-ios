@@ -26,6 +26,7 @@ IndustrialToolkit/
    ├─ Checklist/             чек-листы ПНР: шаблоны, SwiftData-модели, отчёт
    ├─ Signals/               конвертер 4–20 мА / В ↔ величина ↔ код АЦП
    ├─ IEEE754/               float32 ↔ HEX ↔ регистры Modbus
+   ├─ Modbus/                типы INT16…FLOAT64 ↔ регистры, адресация
    └─ Notebook/              блокнот: список, редактор, экспорт
 IndustrialToolkitTests/      unit-тесты расчётной логики
 ```
@@ -68,3 +69,7 @@ IndustrialToolkitTests/      unit-тесты расчётной логики
 | DCBA | DC | BA |
 
 Пример: π = 0x40490FDB → ABCD: 0x4049 0x0FDB; CDAB: 0x0FDB 0x4049.
+
+Для любого числа регистров порядок задают два флага (`ModbusCodec`): **swap байт** внутри регистра (BADC, DCBA) и **swap слов** — обратный порядок регистров (CDAB, DCBA). Для 64 бит: ABCD → ABCDEFGH, BADC → BADCFEHG, CDAB → GHEFCDAB, DCBA → HGFEDCBA.
+
+**Адресация Modbus:** адрес 4xxxx/4xxxxx — первая цифра задаёт область (0 Coils, 1 Discrete Inputs, 3 Input Registers, 4 Holding Registers), остаток минус 1 — смещение в PDU (40001 → 0, 465536 → 65535).
