@@ -86,6 +86,40 @@ struct BackupArchiveTests {
         #expect(name.hasPrefix("industrial-toolkit-backup-20"))
         #expect(name.hasSuffix(".json"))
     }
+
+    @Test("Файл формата v1 (без фото и списков сигналов) восстанавливается")
+    func readsVersionOne() throws {
+        var old = sample
+        old.version = 1
+        old.ioLists = nil
+        let restored = try BackupArchive.decode(old.encoded())
+        #expect(restored.ioLists == nil)
+        #expect(restored.checklists.first?.entries.first?.photos == nil)
+        #expect(BackupMerge.plan(restored, existingNotes: [], existingChecklists: []).ioLists.isEmpty)
+    }
+
+    @Test("Фото и список сигналов переживают JSON; списки тоже не дублируются")
+    func photosAndSignalLists() throws {
+        var archive = sample
+        archive.checklists[0].entries[0].photos = [BackupArchive.Photo(data: Data([0xFF, 0xD8, 0xFF]), createdAt: created)]
+        let record = IOSignalRecord(tag: "PT-101", details: "Давление", kind: .ai, signal: .mA4to20, low: 0, high: 10, unit: "бар", address: "%IW64")
+        archive.ioLists = [
+            BackupArchive.SignalList(
+                name: "Шкаф АСУ-1",
+                createdAt: created,
+                points: [BackupArchive.SignalPoint(order: 0, record: record, status: .failed, remark: "нет сигнала", checkedAt: created)]
+            ),
+        ]
+        let restored = try BackupArchive.decode(archive.encoded())
+        #expect(restored.checklists[0].entries[0].photos?.first?.data == Data([0xFF, 0xD8, 0xFF]))
+        #expect(restored.ioLists?.first?.points.first?.record == record)
+        #expect(restored.ioLists?.first?.points.first?.status == .failed)
+
+        let existing: Set = [BackupMerge.signalListKey(name: "Шкаф АСУ-1", createdAt: created)]
+        let plan = BackupMerge.plan(restored, existingNotes: [], existingChecklists: [], existingSignalLists: existing)
+        #expect(plan.ioLists.isEmpty)
+        #expect(plan.skippedDuplicates == 1)
+    }
 }
 
 #if os(iOS)
@@ -94,13 +128,22 @@ struct BackupArchiveTests {
 struct BackupStoreTests {
     @Test("Экспорт → восстановление в пустую базу → повтор без дублей")
     func restoreIntoEmptyStore() throws {
-        let schema: [any PersistentModel.Type] = [EngineerNote.self, ChecklistRun.self, ChecklistEntry.self]
+        let schema: [any PersistentModel.Type] = [
+            EngineerNote.self, ChecklistRun.self, ChecklistEntry.self, ChecklistPhoto.self, IOList.self, IOPoint.self,
+        ]
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
         let source = try ModelContainer(for: Schema(schema), configurations: configuration)
         let sourceContext = source.mainContext
         sourceContext.insert(EngineerNote(title: "PT-101", body: "0…6 бар", category: .field))
         let run = ChecklistRun.make(in: sourceContext, objectName: "КНС-2", kind: .allCases[0])
-        run.orderedEntries.first?.toggle()
+        let firstEntry = try #require(run.orderedEntries.first)
+        firstEntry.toggle()
+        let photo = ChecklistPhoto(imageData: Data([0xFF, 0xD8, 0xFF]))
+        sourceContext.insert(photo)
+        photo.entry = firstEntry
+        let record = IOSignalRecord(tag: "TT-1", details: "", kind: .ai, signal: .mA4to20, low: -50, high: 150, unit: "°C", address: "")
+        let list = IOList.make(in: sourceContext, name: "Шкаф 1", records: [record])
+        list.orderedPoints.first?.status = .passed
         try sourceContext.save()
         #expect(!run.entries.isEmpty)
 
@@ -111,17 +154,23 @@ struct BackupStoreTests {
         let first = try BackupStore.restore(BackupArchive.decode(data), into: targetContext)
         #expect(first.notes == 1)
         #expect(first.checklists == 1)
+        #expect(first.ioLists == 1)
 
         let runs = try targetContext.fetch(FetchDescriptor<ChecklistRun>())
         let restoredRun = try #require(runs.first)
         #expect(restoredRun.entries.count == run.entries.count)
         #expect(restoredRun.orderedEntries.first?.isDone == true)
+        #expect(restoredRun.orderedEntries.first?.photos.count == 1)
         #expect(try targetContext.fetch(FetchDescriptor<EngineerNote>()).first?.category == .field)
+        let restoredList = try #require(try targetContext.fetch(FetchDescriptor<IOList>()).first)
+        #expect(restoredList.orderedPoints.first?.record == record)
+        #expect(restoredList.orderedPoints.first?.status == .passed)
 
         let second = try BackupStore.restore(BackupArchive.decode(data), into: targetContext)
         #expect(second.notes == 0)
         #expect(second.checklists == 0)
-        #expect(second.skippedDuplicates == 2)
+        #expect(second.ioLists == 0)
+        #expect(second.skippedDuplicates == 3)
     }
 }
 #endif

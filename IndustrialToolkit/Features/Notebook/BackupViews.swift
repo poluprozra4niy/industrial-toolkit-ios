@@ -37,7 +37,7 @@ final class BackupController {
         do {
             let archive = try BackupStore.makeArchive(from: context)
             guard !archive.isEmpty else {
-                message = Message(title: "Нечего сохранять", text: "В блокноте и чек-листах пока нет записей.")
+                message = Message(title: "Нечего сохранять", text: "В блокноте, чек-листах и списках сигналов пока нет записей.")
                 return
             }
             document = BackupDocument(data: try archive.encoded())
@@ -104,7 +104,7 @@ struct BackupMenu: View {
 
     var body: some View {
         Menu {
-            Section("Блокнот и чек-листы ПНР") {
+            Section("Блокнот, чек-листы с фото, списки сигналов") {
                 Button {
                     controller.prepareExport(from: modelContext)
                 } label: {

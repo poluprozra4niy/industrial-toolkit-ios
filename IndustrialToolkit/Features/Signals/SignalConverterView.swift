@@ -1,7 +1,12 @@
 import SwiftUI
 
 struct SignalConverterView: View {
-    @State private var model = SignalConverterViewModel()
+    @State private var model: SignalConverterViewModel
+
+    /// `preset` opens the converter already set to a tag's scale (from the I/O list).
+    init(preset: SignalConverterViewModel? = nil) {
+        _model = State(initialValue: preset ?? SignalConverterViewModel())
+    }
 
     private let chipColumns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
     private let tileColumns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 2)

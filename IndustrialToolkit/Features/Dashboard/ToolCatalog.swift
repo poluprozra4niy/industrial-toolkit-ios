@@ -19,10 +19,10 @@ enum ToolCategory: String, CaseIterable, Identifiable, Hashable {
 
     var subtitle: String {
         switch self {
-        case .electrical: "Сечение, ΔU, мощность, автоматы"
-        case .automation: "4–20 мА, IEEE 754, Modbus, датчики"
+        case .electrical: "Сечение, ΔU, мощность, автоматы, двигатели"
+        case .automation: "4–20 мА, контур, Modbus, датчики, единицы"
         case .design: "ПИД, IP-коды, подсети"
-        case .field: "ПНР, loop check, блокнот"
+        case .field: "ПНР, I/O list, PDF-протоколы, блокнот"
         }
     }
 
@@ -58,6 +58,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     case ipRating
     case networkCalc
     case commissioningChecklist
+    case ioList
     case notebook
 
     var id: String { rawValue }
@@ -67,7 +68,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .cableSizing, .voltageDrop, .ohmsLaw, .wireColors, .breakers, .motor: .electrical
         case .signalScaling, .loopBudget, .ieee754, .modbusRegisters, .modbusAddresses, .modbusResponse, .rtd, .thermocouples, .unitConverter: .automation
         case .pidTuning, .ipRating, .networkCalc: .design
-        case .commissioningChecklist, .notebook: .field
+        case .commissioningChecklist, .ioList, .notebook: .field
         }
     }
 
@@ -95,6 +96,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ipRating: "Степень защиты IP"
         case .networkCalc: "IP-калькулятор сетей"
         case .commissioningChecklist: "Чек-лист ПНР"
+        case .ioList: "Список сигналов (I/O)"
         case .notebook: "Блокнот инженера"
         }
     }
@@ -119,7 +121,8 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .pidTuning: "Циглер–Николс, Коэн–Кун, SIMC, Тайреус–Люйбен"
         case .ipRating: "Расшифровка IPxx, ГОСТ 14254-2015"
         case .networkCalc: "Подсети, проверка ПЛК ↔ панель, порты протоколов"
-        case .commissioningChecklist: "Loop check, DI/AI, изоляция"
+        case .commissioningChecklist: "Loop check, DI/AI, изоляция, фото, PDF"
+        case .ioList: "Импорт CSV, loop check по тегам, PDF-протокол"
         case .notebook: "Результаты и заметки, экспорт"
         }
     }
@@ -145,6 +148,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ipRating: "shield.lefthalf.filled"
         case .networkCalc: "network"
         case .commissioningChecklist: "checklist"
+        case .ioList: "list.bullet.rectangle"
         case .notebook: "note.text"
         }
     }
@@ -169,6 +173,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .motor: ["двигател", "мотор", "чрп", "частотник", "пусков", "обороты", "квт", "насос"]
         case .loopBudget: ["контур", "питани", "барьер", "hart", "нагрузк", "шунт", "250", "24 в"]
         case .unitConverter: ["бар", "мпа", "кгс", "psi", "расход", "м3", "единиц", "давлен", "квт", "л.с."]
+        case .ioList: ["i/o", "io list", "сигнал", "тег", "csv", "excel", "спецификац", "loop", "перечень"]
         case .commissioningChecklist: ["пнр", "loop", "изоляц", "мегаомметр", "di", "do", "протокол"]
         default: []
         }

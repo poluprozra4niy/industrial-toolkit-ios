@@ -157,6 +157,8 @@ struct ToolDestination: View {
             IPRatingView()
         case .networkCalc:
             IPCalculatorView()
+        case .ioList:
+            IOListsView()
         case .commissioningChecklist:
             ChecklistListView()
         case .notebook:

@@ -21,6 +21,8 @@ let package = Package(
                 "Features/Electrical/OhmsLaw.swift",
                 "Features/Checklist/ChecklistTemplates.swift",
                 "Features/Checklist/ChecklistReport.swift",
+                "Features/IOList/CSVParser.swift",
+                "Features/IOList/IOListImport.swift",
                 "Features/Modbus/ModbusCodec.swift",
                 "Features/Modbus/ModbusAddressing.swift",
                 "Features/Modbus/ModbusFrameDecoder.swift",
