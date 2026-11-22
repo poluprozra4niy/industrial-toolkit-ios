@@ -41,7 +41,8 @@ final class IEEE754ViewModel {
     /// Exact number the user typed, kept to report float32 rounding/overflow.
     private(set) var requestedValue: Double?
 
-    init(initialValue: Float = .pi) {
+    /// `Float(Double.pi)` rounds to nearest (0x40490FDB) like PLCs do; `Float.pi` truncates.
+    init(initialValue: Float = Float(Double.pi)) {
         apply(Float32Word(value: initialValue), editedField: nil)
     }
 

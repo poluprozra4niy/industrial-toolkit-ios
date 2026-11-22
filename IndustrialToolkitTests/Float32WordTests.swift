@@ -3,6 +3,9 @@ import Testing
 
 @Suite("IEEE 754 float32 и порядок байт Modbus")
 struct Float32WordTests {
+    /// `Float.pi` is rounded toward zero (0x40490FDA); PLCs and SCADA use round-to-nearest π.
+    private static let pi = Float(Double.pi)
+
     private static let piRegisters: [(ModbusByteOrder, UInt16, UInt16)] = [
         (.abcd, 0x4049, 0x0FDB),
         (.badc, 0x4940, 0xDB0F),
@@ -12,7 +15,7 @@ struct Float32WordTests {
 
     @Test("π кодируется как 0x40490FDB")
     func piBits() {
-        let word = Float32Word(value: .pi)
+        let word = Float32Word(value: Self.pi)
         #expect(word.bits == 0x4049_0FDB)
         #expect(word.hex == "40490FDB")
         #expect(word.bytes == [0x40, 0x49, 0x0F, 0xDB])
@@ -20,10 +23,10 @@ struct Float32WordTests {
 
     @Test("Регистры π во всех порядках байт", arguments: piRegisters)
     func registersForEachOrder(order: ModbusByteOrder, first: UInt16, second: UInt16) {
-        let registers = Float32Word(value: .pi).registers(order: order)
+        let registers = Float32Word(value: Self.pi).registers(order: order)
         #expect(registers.first == first)
         #expect(registers.second == second)
-        #expect(Float32Word(registers: first, second, order: order).value == .pi)
+        #expect(Float32Word(registers: first, second, order: order).value == Self.pi)
     }
 
     @Test("Регистры → float → регистры без потерь", arguments: ModbusByteOrder.allCases)
@@ -67,7 +70,7 @@ struct Float32WordTests {
     func hexParsing() {
         #expect(Float32Word(hex: "0x3F80_0000")?.value == 1)
         #expect(Float32Word(hex: "3f800000")?.value == 1)
-        #expect(Float32Word(hex: "4049 0FDB")?.value == .pi)
+        #expect(Float32Word(hex: "4049 0FDB")?.value == Self.pi)
         #expect(Float32Word(hex: "XYZ") == nil)
         #expect(Float32Word(hex: "123456789") == nil)
         #expect(Float32Word(hex: "") == nil)
