@@ -11,7 +11,7 @@ struct IndustrialToolkitApp: App {
                 .tint(Theme.accent)
                 .preferredColorScheme(appearance.colorScheme)
         }
-        .modelContainer(for: EngineerNote.self)
+        .modelContainer(for: [EngineerNote.self, ChecklistRun.self, ChecklistEntry.self])
     }
 }
 

@@ -68,7 +68,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     /// Must match the implemented branches in `ToolDestination`.
     var isAvailable: Bool {
         switch self {
-        case .voltageDrop, .signalScaling, .ieee754, .notebook: true
+        case .voltageDrop, .signalScaling, .ieee754, .commissioningChecklist, .notebook: true
         default: false
         }
     }
@@ -139,6 +139,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .cableSizing: ["кабель", "медь", "алюмин"]
         case .voltageDrop: ["кабель", "медь", "алюмин", "потери", "линия", "du", "24 в"]
         case .networkCalc: ["маска", "ethernet", "profinet", "tcp"]
+        case .commissioningChecklist: ["пнр", "loop", "изоляц", "мегаомметр", "di", "do", "протокол"]
         default: []
         }
     }

@@ -16,6 +16,8 @@ let package = Package(
                 "Features/Signals/SignalScale.swift",
                 "Features/IEEE754/Float32Word.swift",
                 "Features/Electrical/VoltageDrop.swift",
+                "Features/Checklist/ChecklistTemplates.swift",
+                "Features/Checklist/ChecklistReport.swift",
             ]
         ),
         .testTarget(

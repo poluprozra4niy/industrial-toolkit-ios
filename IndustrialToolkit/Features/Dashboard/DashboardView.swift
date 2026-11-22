@@ -127,6 +127,8 @@ struct ToolDestination: View {
             SignalConverterView()
         case .ieee754:
             IEEE754View()
+        case .commissioningChecklist:
+            ChecklistListView()
         case .notebook:
             NotebookView()
         default:

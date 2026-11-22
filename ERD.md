@@ -1,6 +1,6 @@
 # ERD — локальное хранилище (SwiftData)
 
-Справочные данные (таблицы датчиков, автоматы, IP-коды) — статичные Swift-структуры в бандле, в БД не хранятся.
+Справочные данные (шаблоны чек-листов, таблицы датчиков, автоматы, IP-коды) — статичные Swift-структуры в бандле, в БД не хранятся. При создании чек-листа пункты шаблона копируются в `ChecklistEntry`, поэтому правка шаблона в новой версии приложения не меняет уже начатые чек-листы.
 
 ```mermaid
 erDiagram
@@ -11,30 +11,25 @@ erDiagram
         Date createdAt
         Date updatedAt
     }
-    ChecklistTemplate ||--o{ ChecklistItem : "содержит"
-    ChecklistRun ||--o{ ChecklistItemState : "отмечает"
-    ChecklistTemplate ||--o{ ChecklistRun : "экземпляр"
-    ChecklistItem ||--o{ ChecklistItemState : "состояние"
-    ChecklistTemplate {
-        String title
-        String kind "loopCheck | discreteIO | insulation"
-    }
-    ChecklistItem {
-        Int order
-        String text
-    }
+    ChecklistRun ||--o{ ChecklistEntry : "entries (cascade)"
     ChecklistRun {
-        String objectName
-        Date startedAt
+        String objectName "тег или объект, напр. PT-101"
+        String kindRaw "analogLoop | discreteIO | insulation"
+        Date createdAt
     }
-    ChecklistItemState {
+    ChecklistEntry {
+        Int order "порядок из шаблона"
+        String section
+        String text
+        String hint
         Bool isDone
         String remark
-        Date checkedAt
+        Date checkedAt "nil, пока не отмечен"
     }
 ```
 
-| Сущность | Статус |
+| Сущность | Файл |
 |---|---|
-| `EngineerNote` | реализовано (`Core/Persistence/EngineerNote.swift`) |
-| `Checklist*` | следующая итерация (модуль чек-листов ПНР) |
+| `EngineerNote` | `Core/Persistence/EngineerNote.swift` |
+| `ChecklistRun`, `ChecklistEntry` | `Features/Checklist/ChecklistModels.swift` |
+| Шаблоны (`ChecklistKind`) | `Features/Checklist/ChecklistTemplates.swift`, не в БД |
