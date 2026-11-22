@@ -197,6 +197,8 @@ struct ChecklistRunView: View {
 
     @State private var remarkTarget: ChecklistEntry?
     @State private var remarkDraft = ""
+    @State private var photoTarget: ChecklistEntry?
+    @State private var showsProtocol = false
 
     private struct EntryGroup: Identifiable {
         let title: String
@@ -236,6 +238,14 @@ struct ChecklistRunView: View {
                         }
                         .buttonStyle(.plain)
                         .listRowBackground(Theme.surface)
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                photoTarget = entry
+                            } label: {
+                                Label("Фото", systemImage: "camera")
+                            }
+                            .tint(Theme.accent)
+                        }
                         .swipeActions(edge: .trailing) {
                             Button {
                                 remarkDraft = entry.remark
@@ -250,7 +260,7 @@ struct ChecklistRunView: View {
             }
 
             Section {
-                Text("Нажмите пункт, чтобы отметить. Смахните влево, чтобы добавить замечание.")
+                Text("Нажмите пункт, чтобы отметить. Смахните влево — замечание, вправо — фото. PDF-протокол с фото и подписями — кнопка вверху.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -262,6 +272,23 @@ struct ChecklistRunView: View {
         .navigationBarTitleDisplayMode(.inline)
         .resultActions(title: "Чек-лист: \(run.objectName)", summary: run.report, category: .field)
         .sensoryFeedback(.selection, trigger: progress.done)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showsProtocol = true
+                } label: {
+                    Label("PDF-протокол", systemImage: "doc.richtext")
+                }
+            }
+        }
+        .sheet(item: $photoTarget) { entry in
+            EntryPhotosSheet(entry: entry)
+        }
+        .sheet(isPresented: $showsProtocol) {
+            ReportExportSheet(filePrefix: "Протокол", objectName: run.objectName) { signers in
+                run.protocolDocument(signers: signers)
+            }
+        }
         .alert(
             "Замечание",
             isPresented: Binding(get: { remarkTarget != nil }, set: { if !$0 { remarkTarget = nil } })
@@ -327,10 +354,18 @@ private struct EntryRow: View {
                         .font(.caption)
                         .foregroundStyle(Theme.accent)
                 }
-                if let checkedAt = entry.checkedAt {
-                    Text(checkedAt.formatted(date: .omitted, time: .shortened))
-                        .font(.monoCaption)
-                        .foregroundStyle(.secondary)
+                HStack(spacing: 10) {
+                    if let checkedAt = entry.checkedAt {
+                        Text(checkedAt.formatted(date: .omitted, time: .shortened))
+                            .font(.monoCaption)
+                            .foregroundStyle(.secondary)
+                    }
+                    if !entry.photos.isEmpty {
+                        Label("\(entry.photos.count)", systemImage: "camera.fill")
+                            .font(.monoCaption)
+                            .foregroundStyle(Theme.accent)
+                            .accessibilityLabel("Фото: \(entry.photos.count)")
+                    }
                 }
             }
             Spacer(minLength: 0)

@@ -82,6 +82,16 @@ final class PIDTuningViewModel {
         }
     }
 
+    /// Takes the stopwatch result and switches the screen to step-test identification.
+    func apply(_ result: StepTestResult) {
+        method = .openLoop
+        modelInput = .stepTest
+        outputStepText = Fmt.number(result.outputStepPercent, fractionDigits: 3)
+        processChangeText = Fmt.number(result.processChangePercent, fractionDigits: 3)
+        t28Text = Fmt.number(result.t28, fractionDigits: 1)
+        t63Text = Fmt.number(result.t63, fractionDigits: 1)
+    }
+
     var modelError: String? {
         guard method == .openLoop, processModel == nil else { return nil }
         switch modelInput {

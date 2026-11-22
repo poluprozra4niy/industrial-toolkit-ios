@@ -36,6 +36,19 @@ final class ChecklistRun {
         ChecklistReport.render(objectName: objectName, kindTitle: kindTitle, createdAt: createdAt, lines: lines)
     }
 
+    func protocolDocument(signers: ReportSigners, issuedAt: Date = .now) -> ReportDocument {
+        let entries = orderedEntries
+        return ChecklistReport.document(
+            objectName: objectName,
+            kindTitle: kindTitle,
+            createdAt: createdAt,
+            lines: entries.map(\.line),
+            photos: entries.map { $0.photos.sorted { $0.createdAt < $1.createdAt }.map(\.imageData) },
+            signers: signers,
+            issuedAt: issuedAt
+        )
+    }
+
     /// Entries are attached after the run is inserted: SwiftData relationships on
     /// not-yet-inserted models are not reliably persisted on iOS 17.
     @discardableResult
@@ -65,6 +78,8 @@ final class ChecklistEntry {
     var remark: String
     var checkedAt: Date?
     var run: ChecklistRun?
+    @Relationship(deleteRule: .cascade, inverse: \ChecklistPhoto.entry)
+    var photos: [ChecklistPhoto] = []
 
     init(order: Int, section: String, text: String, hint: String) {
         self.order = order

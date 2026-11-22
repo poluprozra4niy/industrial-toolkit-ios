@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PIDTuningView: View {
     @State private var model = PIDTuningViewModel()
+    @State private var showsStopwatch = false
 
     private let typeColumns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
     private let cellColumns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
@@ -28,6 +29,11 @@ struct PIDTuningView: View {
         .navigationBarTitleDisplayMode(.inline)
         .keyboardDoneToolbar()
         .resultActions(title: model.noteTitle, summary: model.summary, category: .design)
+        .sheet(isPresented: $showsStopwatch) {
+            StepTestView { result in
+                model.apply(result)
+            }
+        }
     }
 
     // MARK: Input
@@ -77,6 +83,13 @@ struct PIDTuningView: View {
                 NumericField(label: "T (пост. вр.)", text: $model.timeConstantText)
             }
         case .stepTest:
+            Button {
+                showsStopwatch = true
+            } label: {
+                Label("Секундомер теста на объекте", systemImage: "stopwatch")
+                    .frame(maxWidth: .infinity, minHeight: 44)
+            }
+            .buttonStyle(.bordered)
             HStack(alignment: .top, spacing: 10) {
                 NumericField(label: "Δu выхода, %", text: $model.outputStepText)
                 NumericField(label: "Δy процесса, %", text: $model.processChangeText)
