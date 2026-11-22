@@ -15,6 +15,13 @@ final class ChecklistRun {
         self.createdAt = createdAt
     }
 
+    /// Restores a run from a backup verbatim, including kinds this build no longer ships.
+    init(objectName: String, kindRaw: String, createdAt: Date) {
+        self.objectName = objectName
+        self.kindRaw = kindRaw
+        self.createdAt = createdAt
+    }
+
     var kind: ChecklistKind? { ChecklistKind(rawValue: kindRaw) }
 
     var kindTitle: String { kind?.title ?? kindRaw }

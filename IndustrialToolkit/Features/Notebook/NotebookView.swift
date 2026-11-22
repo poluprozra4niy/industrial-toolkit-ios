@@ -19,6 +19,7 @@ struct NotebookView: View {
     @State private var query = ""
     @State private var editorTarget: EditorTarget?
     @State private var deletionError: String?
+    @State private var backup = BackupController()
 
     private var filteredNotes: [EngineerNote] {
         let needle = query.trimmingCharacters(in: .whitespaces)
@@ -34,7 +35,7 @@ struct NotebookView: View {
                 ContentUnavailableView(
                     "Блокнот пуст",
                     systemImage: "note.text",
-                    description: Text("Сохраняйте результаты кнопкой «В блокнот» в любом инструменте или создайте заметку.")
+                    description: Text("Сохраняйте результаты кнопкой «В блокнот» в любом инструменте или создайте заметку. Резервную копию можно восстановить через меню слева вверху.")
                 )
             } else if filteredNotes.isEmpty {
                 ContentUnavailableView.search(text: query)
@@ -58,6 +59,9 @@ struct NotebookView: View {
         .navigationTitle("Блокнот")
         .searchable(text: $query, prompt: "Поиск по заметкам")
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackupMenu(controller: backup)
+            }
             ToolbarItemGroup(placement: .topBarTrailing) {
                 if !notes.isEmpty {
                     ShareLink(item: exportAll) {
@@ -71,6 +75,7 @@ struct NotebookView: View {
                 }
             }
         }
+        .backupPresentation(backup)
         .sheet(item: $editorTarget) { target in
             switch target {
             case .new: NoteEditorView(note: nil)

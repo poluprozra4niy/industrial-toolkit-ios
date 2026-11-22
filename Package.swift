@@ -13,6 +13,7 @@ let package = Package(
             sources: [
                 "Core/Utils/NumberParser.swift",
                 "Core/Utils/Formatting.swift",
+                "Core/Persistence/BackupArchive.swift",
                 "Features/Signals/SignalScale.swift",
                 "Features/IEEE754/Float32Word.swift",
                 "Features/Electrical/VoltageDrop.swift",
@@ -21,6 +22,7 @@ let package = Package(
                 "Features/Checklist/ChecklistReport.swift",
                 "Features/Modbus/ModbusCodec.swift",
                 "Features/Modbus/ModbusAddressing.swift",
+                "Features/Modbus/ModbusFrameDecoder.swift",
                 "Features/Sensors/RTD.swift",
                 "Features/Network/IPv4.swift",
                 "Features/Control/PIDTuning.swift",

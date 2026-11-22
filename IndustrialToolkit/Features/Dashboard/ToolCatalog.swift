@@ -48,6 +48,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     case ieee754
     case modbusRegisters
     case modbusAddresses
+    case modbusResponse
     case rtd
     case thermocouples
     case pidTuning
@@ -61,7 +62,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     var category: ToolCategory {
         switch self {
         case .cableSizing, .voltageDrop, .ohmsLaw, .wireColors, .breakers: .electrical
-        case .signalScaling, .ieee754, .modbusRegisters, .modbusAddresses, .rtd, .thermocouples: .automation
+        case .signalScaling, .ieee754, .modbusRegisters, .modbusAddresses, .modbusResponse, .rtd, .thermocouples: .automation
         case .pidTuning, .ipRating, .networkCalc: .design
         case .commissioningChecklist, .notebook: .field
         }
@@ -81,6 +82,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ieee754: "IEEE 754 / Float"
         case .modbusRegisters: "Регистры Modbus"
         case .modbusAddresses: "Адреса Modbus"
+        case .modbusResponse: "Разбор кадра Modbus"
         case .rtd: "Термосопротивления"
         case .thermocouples: "Термопары"
         case .pidTuning: "Настройка ПИД"
@@ -102,6 +104,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ieee754: "Float ↔ HEX ↔ регистры, порядок байт"
         case .modbusRegisters: "INT16…FLOAT64, порядок слов, адресация 4xxxx"
         case .modbusAddresses: "4xxxx ↔ DEC ↔ HEX ↔ %MW, кадр RTU/TCP с CRC"
+        case .modbusResponse: "HEX-кадр RTU/TCP → CRC, коды ошибок, значения"
         case .rtd: "Pt100, Pt1000, 100П, 50М: R ↔ t, таблицы"
         case .thermocouples: "ТХА (K): мВ ↔ °C, холодный спай"
         case .pidTuning: "Циглер–Николс, Коэн–Кун, SIMC, Тайреус–Люйбен"
@@ -123,6 +126,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ieee754: "memorychip"
         case .modbusRegisters: "square.grid.3x2"
         case .modbusAddresses: "number.square"
+        case .modbusResponse: "text.magnifyingglass"
         case .rtd: "thermometer.medium"
         case .thermocouples: "flame"
         case .pidTuning: "point.topleft.down.to.point.bottomright.curvepath"
@@ -139,6 +143,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ieee754: ["float", "hex", "modbus", "плк", "плавающ", "abcd", "cdab", "endian"]
         case .modbusRegisters: ["int", "word", "dword", "endian", "40001", "holding", "адрес", "uint64", "double"]
         case .modbusAddresses: ["40001", "hex", "адрес", "смещен", "offset", "%mw", "crc", "rtu", "tcp", "coil", "holding", "регистр"]
+        case .modbusResponse: ["ответ", "кадр", "crc", "ошибк", "exception", "rtu", "tcp", "сниффер", "hex", "лог"]
         case .rtd: ["pt100", "pt1000", "100п", "50м", "термосопротивлен", "температур", "тс"]
         case .thermocouples: ["термопар", "тха", "тхк", "мв", "температур"]
         case .cableSizing: ["кабель", "медь", "алюмин", "пуэ", "сечени", "допустим", "провод"]

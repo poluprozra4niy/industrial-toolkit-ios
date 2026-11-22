@@ -139,6 +139,8 @@ struct ToolDestination: View {
             ModbusRegistersView()
         case .modbusAddresses:
             ModbusAddressView()
+        case .modbusResponse:
+            ModbusResponseView()
         case .rtd:
             RTDView()
         case .thermocouples:
