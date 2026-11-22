@@ -1,0 +1,79 @@
+name: Build iOS
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  PROJECT: IndustrialToolkit.xcodeproj
+  SCHEME: IndustrialToolkit
+  APP_NAME: IndustrialToolkit
+
+jobs:
+  test:
+    name: Unit tests (iOS Simulator)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Run tests
+        run: |
+          # Runner images change simulator names between Xcode releases; pick any available iPhone.
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          devices = json.load(sys.stdin)['devices']
+          print(next(d['udid'] for runtime, items in devices.items() if 'iOS' in runtime
+                     for d in items if d['name'].startswith('iPhone')))
+          ")
+          xcodebuild test \
+            -project "$PROJECT" -scheme "$SCHEME" \
+            -destination "id=$UDID"
+
+  build:
+    name: Simulator app (Appetize) + unsigned IPA (Sideloadly)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Build for iOS Simulator
+        run: |
+          xcodebuild build \
+            -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/sim \
+            ONLY_ACTIVE_ARCH=NO
+          # Zip ourselves: GitHub artifact compression drops the executable bit inside .app.
+          cd build/sim/Build/Products/Release-iphonesimulator
+          ditto -c -k --keepParent "$APP_NAME.app" "$GITHUB_WORKSPACE/$APP_NAME-simulator.zip"
+
+      - name: Build unsigned IPA
+        run: |
+          xcodebuild archive \
+            -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' \
+            -archivePath build/$APP_NAME.xcarchive \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+          mkdir -p build/ipa/Payload
+          cp -R "build/$APP_NAME.xcarchive/Products/Applications/$APP_NAME.app" build/ipa/Payload/
+          cd build/ipa
+          ditto -c -k --keepParent Payload "$GITHUB_WORKSPACE/$APP_NAME-unsigned.ipa"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appetize-simulator-app
+          path: ${{ env.APP_NAME }}-simulator.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sideload-ipa
+          path: ${{ env.APP_NAME }}-unsigned.ipa

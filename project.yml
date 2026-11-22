@@ -1,0 +1,45 @@
+name: IndustrialToolkit
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  IndustrialToolkit:
+    type: application
+    platform: iOS
+    sources:
+      - IndustrialToolkit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.industrialtoolkit
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: "Инженер АСУ ТП"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        TARGETED_DEVICE_FAMILY: "1,2"
+  IndustrialToolkitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - IndustrialToolkitTests
+    dependencies:
+      - target: IndustrialToolkit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  IndustrialToolkit:
+    build:
+      targets:
+        IndustrialToolkit: all
+        IndustrialToolkitTests: [test]
+    test:
+      targets:
+        - IndustrialToolkitTests
