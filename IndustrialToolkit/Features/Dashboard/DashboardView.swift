@@ -137,6 +137,8 @@ struct ToolDestination: View {
             IEEE754View()
         case .modbusRegisters:
             ModbusRegistersView()
+        case .modbusAddresses:
+            ModbusAddressView()
         case .rtd:
             RTDView()
         case .thermocouples:

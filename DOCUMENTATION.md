@@ -26,7 +26,7 @@ IndustrialToolkit/
    ├─ Checklist/             чек-листы ПНР: шаблоны, SwiftData-модели, отчёт
    ├─ Signals/               конвертер 4–20 мА / В ↔ величина ↔ код АЦП
    ├─ IEEE754/               float32 ↔ HEX ↔ регистры Modbus
-   ├─ Modbus/                типы INT16…FLOAT64 ↔ регистры, адресация
+   ├─ Modbus/                типы INT16…FLOAT64 ↔ регистры; конвертер адресов, кадры RTU/TCP
    ├─ Sensors/               термосопротивления Pt / П / М
    ├─ Network/               IP-калькулятор, порты промышленных протоколов
    ├─ Control/               настройка П/ПИ/ПИД-регуляторов
@@ -123,3 +123,10 @@ IndustrialToolkitTests/      unit-тесты расчётной логики
 Для любого числа регистров порядок задают два флага (`ModbusCodec`): **swap байт** внутри регистра (BADC, DCBA) и **swap слов** — обратный порядок регистров (CDAB, DCBA). Для 64 бит: ABCD → ABCDEFGH, BADC → BADCFEHG, CDAB → GHEFCDAB, DCBA → HGFEDCBA.
 
 **Адресация Modbus:** адрес 4xxxx/4xxxxx — первая цифра задаёт область (0 Coils, 1 Discrete Inputs, 3 Input Registers, 4 Holding Registers), остаток минус 1 — смещение в PDU (40001 → 0, 465536 → 65535).
+
+**Конвертер адресов** (`ModbusAddressing.swift`): номер с 1 = смещение + 1; Schneider %MWi — holding register со смещением i, %Mi — coil i. HEX принимает префиксы `0x`, `16#`, `$` и суффикс `h`, разделители `_`. Бит регистра 0…15 через точку, маска = 1 << бит; для coils и discrete inputs бит недопустим.
+
+Запрос чтения (Modbus Application Protocol v1.1b3): PDU = FC, адрес (старший, младший), количество (старший, младший). Лимиты: FC01/02 — 1…2000, FC03/04 — 1…125, FC15 — 1…1968, FC16 — 1…123; последний адрес ≤ 65535.
+- RTU: адрес ведомого + PDU + CRC-16/MODBUS (полином 0xA001, начальное 0xFFFF, младший байт первым). Эталон: `11 03 00 6B 00 03 76 87`.
+- TCP: MBAP = Transaction ID, Protocol 0, Length (= 1 + длина PDU), Unit ID.
+- Длина ответа: PDU = 2 + данные (2 байта на регистр, биты по 8 в байт); RTU + 3 байта, TCP + 7.
