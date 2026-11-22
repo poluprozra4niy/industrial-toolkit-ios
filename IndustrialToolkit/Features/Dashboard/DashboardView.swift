@@ -64,7 +64,7 @@ struct DashboardView: View {
         VStack(alignment: .leading, spacing: 10) {
             SectionLabel("Быстрый доступ")
             VStack(spacing: 8) {
-                ForEach(Tool.allCases.filter(\.isAvailable)) { tool in
+                ForEach(Tool.quickAccess) { tool in
                     ToolLink(tool: tool)
                 }
             }
@@ -121,10 +121,16 @@ struct ToolDestination: View {
 
     var body: some View {
         switch tool {
+        case .cableSizing:
+            CableSizingView()
         case .voltageDrop:
             VoltageDropView()
         case .ohmsLaw:
             OhmsLawView()
+        case .wireColors:
+            ConductorColorsView()
+        case .breakers:
+            BreakersView()
         case .signalScaling:
             SignalConverterView()
         case .ieee754:
@@ -133,20 +139,18 @@ struct ToolDestination: View {
             ModbusRegistersView()
         case .rtd:
             RTDView()
-        case .networkCalc:
-            IPCalculatorView()
+        case .thermocouples:
+            ThermocoupleView()
         case .pidTuning:
             PIDTuningView()
+        case .ipRating:
+            IPRatingView()
+        case .networkCalc:
+            IPCalculatorView()
         case .commissioningChecklist:
             ChecklistListView()
         case .notebook:
             NotebookView()
-        default:
-            ContentUnavailableView(
-                tool.title,
-                systemImage: tool.symbol,
-                description: Text("Модуль запланирован в следующей версии.")
-            )
         }
     }
 }
@@ -157,8 +161,6 @@ private struct CategoryCard: View {
     let category: ToolCategory
 
     var body: some View {
-        let tools = category.tools
-        let available = tools.filter(\.isAvailable).count
         VStack(alignment: .leading, spacing: 10) {
             Image(systemName: category.symbol)
                 .font(.title3.weight(.semibold))
@@ -173,9 +175,9 @@ private struct CategoryCard: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(2, reservesSpace: true)
-            Text("\(available) из \(tools.count) готово")
+            Text("Инструментов: \(category.tools.count)")
                 .font(.monoCaption)
-                .foregroundStyle(available > 0 ? Theme.accent : Color.secondary)
+                .foregroundStyle(Theme.accent)
         }
         .industrialCard()
         .contentShape(Rectangle())
@@ -190,7 +192,6 @@ private struct ToolLink: View {
             ToolRow(tool: tool)
         }
         .buttonStyle(.plain)
-        .disabled(!tool.isAvailable)
     }
 }
 
@@ -201,7 +202,7 @@ private struct ToolRow: View {
         HStack(spacing: 12) {
             Image(systemName: tool.symbol)
                 .font(.body.weight(.semibold))
-                .foregroundStyle(tool.isAvailable ? Theme.accent : Color.secondary)
+                .foregroundStyle(Theme.accent)
                 .frame(width: 38, height: 38)
                 .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Theme.fieldCornerRadius))
             VStack(alignment: .leading, spacing: 2) {
@@ -212,25 +213,13 @@ private struct ToolRow: View {
                     .lineLimit(2)
             }
             Spacer(minLength: 8)
-            if tool.isAvailable {
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.tertiary)
-            } else {
-                Text("СКОРО")
-                    .font(.caption2.weight(.bold))
-                    .tracking(0.6)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 3)
-                    .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(Theme.border, lineWidth: 1))
-            }
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
         .padding(12)
         .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
         .overlay(RoundedRectangle(cornerRadius: Theme.cornerRadius).strokeBorder(Theme.border, lineWidth: 1))
-        .opacity(tool.isAvailable ? 1 : 0.6)
         .contentShape(Rectangle())
-        .accessibilityHint(Text(tool.isAvailable ? "Открыть" : "В разработке"))
     }
 }

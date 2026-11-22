@@ -23,6 +23,11 @@ let package = Package(
                 "Features/Sensors/RTD.swift",
                 "Features/Network/IPv4.swift",
                 "Features/Control/PIDTuning.swift",
+                "Features/Electrical/Breakers.swift",
+                "Features/Electrical/CableAmpacity.swift",
+                "Features/Sensors/Thermocouple.swift",
+                "Features/Reference/IPRating.swift",
+                "Features/Reference/ConductorColors.swift",
             ]
         ),
         .testTarget(
