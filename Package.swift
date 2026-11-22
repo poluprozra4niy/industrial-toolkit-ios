@@ -15,6 +15,7 @@ let package = Package(
                 "Core/Utils/Formatting.swift",
                 "Features/Signals/SignalScale.swift",
                 "Features/IEEE754/Float32Word.swift",
+                "Features/Electrical/VoltageDrop.swift",
             ]
         ),
         .testTarget(

@@ -121,6 +121,8 @@ struct ToolDestination: View {
 
     var body: some View {
         switch tool {
+        case .voltageDrop:
+            VoltageDropView()
         case .signalScaling:
             SignalConverterView()
         case .ieee754:
