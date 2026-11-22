@@ -47,7 +47,8 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     case signalScaling
     case ieee754
     case modbusRegisters
-    case sensorTables
+    case rtd
+    case thermocouples
     case pidTuning
     case ipRating
     case networkCalc
@@ -59,7 +60,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     var category: ToolCategory {
         switch self {
         case .cableSizing, .voltageDrop, .ohmsLaw, .wireColors, .breakers: .electrical
-        case .signalScaling, .ieee754, .modbusRegisters, .sensorTables: .automation
+        case .signalScaling, .ieee754, .modbusRegisters, .rtd, .thermocouples: .automation
         case .pidTuning, .ipRating, .networkCalc: .design
         case .commissioningChecklist, .notebook: .field
         }
@@ -68,7 +69,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     /// Must match the implemented branches in `ToolDestination`.
     var isAvailable: Bool {
         switch self {
-        case .voltageDrop, .ohmsLaw, .signalScaling, .ieee754, .modbusRegisters, .commissioningChecklist, .notebook: true
+        case .voltageDrop, .ohmsLaw, .signalScaling, .ieee754, .modbusRegisters, .rtd, .commissioningChecklist, .notebook: true
         default: false
         }
     }
@@ -83,7 +84,8 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .signalScaling: "Конвертер сигналов"
         case .ieee754: "IEEE 754 / Float"
         case .modbusRegisters: "Регистры Modbus"
-        case .sensorTables: "Термопары и ТС"
+        case .rtd: "Термосопротивления"
+        case .thermocouples: "Термопары"
         case .pidTuning: "Настройка ПИД"
         case .ipRating: "Степень защиты IP"
         case .networkCalc: "IP-калькулятор сетей"
@@ -102,7 +104,8 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .signalScaling: "4–20 мА, 0–10 В ↔ величина ↔ код АЦП"
         case .ieee754: "Float ↔ HEX ↔ регистры, порядок байт"
         case .modbusRegisters: "INT16…FLOAT64, порядок слов, адресация 4xxxx"
-        case .sensorTables: "ТХА, ТХК, Pt100, Pt1000"
+        case .rtd: "Pt100, Pt1000, 100П, 50М: R ↔ t, таблицы"
+        case .thermocouples: "ТХА (K), ТХК (L): мВ ↔ °C"
         case .pidTuning: "Метод Циглера–Николса"
         case .ipRating: "Расшифровка IPxx"
         case .networkCalc: "Маски, подсети, Profinet / Modbus TCP"
@@ -121,7 +124,8 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .signalScaling: "gauge.with.dots.needle.50percent"
         case .ieee754: "memorychip"
         case .modbusRegisters: "square.grid.3x2"
-        case .sensorTables: "thermometer.medium"
+        case .rtd: "thermometer.medium"
+        case .thermocouples: "flame"
         case .pidTuning: "point.topleft.down.to.point.bottomright.curvepath"
         case .ipRating: "shield.lefthalf.filled"
         case .networkCalc: "network"
@@ -135,7 +139,8 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .signalScaling: ["4-20", "ма", "ацп", "шкала", "namur", "аналог", "s7", "27648"]
         case .ieee754: ["float", "hex", "modbus", "плк", "плавающ", "abcd", "cdab", "endian"]
         case .modbusRegisters: ["int", "word", "dword", "endian", "40001", "holding", "адрес", "uint64", "double"]
-        case .sensorTables: ["pt100", "pt1000", "термопар", "температур"]
+        case .rtd: ["pt100", "pt1000", "100п", "50м", "термосопротивлен", "температур", "тс"]
+        case .thermocouples: ["термопар", "тха", "тхк", "мв", "температур"]
         case .cableSizing: ["кабель", "медь", "алюмин"]
         case .voltageDrop: ["кабель", "медь", "алюмин", "потери", "линия", "du", "24 в"]
         case .networkCalc: ["маска", "ethernet", "profinet", "tcp"]

@@ -6,6 +6,11 @@ build/
 DerivedData/
 .swiftpm/
 *.xcuserstate
+# Personal documents dropped into the project folder
+*.docx
+*.doc
+*.pdf
+*.xlsx
 # Local build/upload archives (Appetize, Sideloadly)
 *.zip
 *.ipa

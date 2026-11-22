@@ -20,6 +20,7 @@ let package = Package(
                 "Features/Checklist/ChecklistTemplates.swift",
                 "Features/Checklist/ChecklistReport.swift",
                 "Features/Modbus/ModbusCodec.swift",
+                "Features/Sensors/RTD.swift",
             ]
         ),
         .testTarget(

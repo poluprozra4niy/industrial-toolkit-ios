@@ -131,6 +131,8 @@ struct ToolDestination: View {
             IEEE754View()
         case .modbusRegisters:
             ModbusRegistersView()
+        case .rtd:
+            RTDView()
         case .commissioningChecklist:
             ChecklistListView()
         case .notebook:
