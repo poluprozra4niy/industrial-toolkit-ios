@@ -69,7 +69,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     /// Must match the implemented branches in `ToolDestination`.
     var isAvailable: Bool {
         switch self {
-        case .voltageDrop, .ohmsLaw, .signalScaling, .ieee754, .modbusRegisters, .rtd, .networkCalc, .commissioningChecklist, .notebook: true
+        case .voltageDrop, .ohmsLaw, .signalScaling, .ieee754, .modbusRegisters, .rtd, .pidTuning, .networkCalc, .commissioningChecklist, .notebook: true
         default: false
         }
     }
@@ -106,7 +106,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .modbusRegisters: "INT16…FLOAT64, порядок слов, адресация 4xxxx"
         case .rtd: "Pt100, Pt1000, 100П, 50М: R ↔ t, таблицы"
         case .thermocouples: "ТХА (K), ТХК (L): мВ ↔ °C"
-        case .pidTuning: "Метод Циглера–Николса"
+        case .pidTuning: "Циглер–Николс, Коэн–Кун, SIMC, Тайреус–Люйбен"
         case .ipRating: "Расшифровка IPxx"
         case .networkCalc: "Подсети, проверка ПЛК ↔ панель, порты протоколов"
         case .commissioningChecklist: "Loop check, DI/AI, изоляция"
@@ -144,6 +144,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .cableSizing: ["кабель", "медь", "алюмин"]
         case .voltageDrop: ["кабель", "медь", "алюмин", "потери", "линия", "du", "24 в"]
         case .networkCalc: ["маска", "ethernet", "profinet", "tcp", "подсет", "ip", "шлюз", "порт", "502", "cidr"]
+        case .pidTuning: ["пид", "pid", "регулятор", "циглер", "kp", "ti", "td", "разгон", "xp"]
         case .ohmsLaw: ["ом", "мощност", "cos", "квар", "крм", "реактив", "напряжен"]
         case .commissioningChecklist: ["пнр", "loop", "изоляц", "мегаомметр", "di", "do", "протокол"]
         default: []

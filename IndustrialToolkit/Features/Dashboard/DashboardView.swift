@@ -135,6 +135,8 @@ struct ToolDestination: View {
             RTDView()
         case .networkCalc:
             IPCalculatorView()
+        case .pidTuning:
+            PIDTuningView()
         case .commissioningChecklist:
             ChecklistListView()
         case .notebook:

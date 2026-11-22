@@ -22,6 +22,7 @@ let package = Package(
                 "Features/Modbus/ModbusCodec.swift",
                 "Features/Sensors/RTD.swift",
                 "Features/Network/IPv4.swift",
+                "Features/Control/PIDTuning.swift",
             ]
         ),
         .testTarget(
