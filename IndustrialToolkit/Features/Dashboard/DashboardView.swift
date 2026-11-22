@@ -123,6 +123,8 @@ struct ToolDestination: View {
         switch tool {
         case .voltageDrop:
             VoltageDropView()
+        case .ohmsLaw:
+            OhmsLawView()
         case .signalScaling:
             SignalConverterView()
         case .ieee754:

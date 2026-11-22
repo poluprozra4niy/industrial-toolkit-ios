@@ -68,7 +68,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     /// Must match the implemented branches in `ToolDestination`.
     var isAvailable: Bool {
         switch self {
-        case .voltageDrop, .signalScaling, .ieee754, .modbusRegisters, .commissioningChecklist, .notebook: true
+        case .voltageDrop, .ohmsLaw, .signalScaling, .ieee754, .modbusRegisters, .commissioningChecklist, .notebook: true
         default: false
         }
     }
@@ -96,7 +96,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .cableSizing: "По длительно допустимому току, Cu / Al"
         case .voltageDrop: "ΔU по длине, току и сечению"
-        case .ohmsLaw: "P, Q, S, cos φ"
+        case .ohmsLaw: "U, I, R, P; P, Q, S, cos φ; КРМ"
         case .wireColors: "Цвета жил, PE / N / L"
         case .breakers: "Номиналы и времятоковые кривые"
         case .signalScaling: "4–20 мА, 0–10 В ↔ величина ↔ код АЦП"
@@ -139,6 +139,7 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .cableSizing: ["кабель", "медь", "алюмин"]
         case .voltageDrop: ["кабель", "медь", "алюмин", "потери", "линия", "du", "24 в"]
         case .networkCalc: ["маска", "ethernet", "profinet", "tcp"]
+        case .ohmsLaw: ["ом", "мощност", "cos", "квар", "крм", "реактив", "напряжен"]
         case .commissioningChecklist: ["пнр", "loop", "изоляц", "мегаомметр", "di", "do", "протокол"]
         default: []
         }
