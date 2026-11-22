@@ -131,8 +131,12 @@ struct ToolDestination: View {
             ConductorColorsView()
         case .breakers:
             BreakersView()
+        case .motor:
+            MotorView()
         case .signalScaling:
             SignalConverterView()
+        case .loopBudget:
+            LoopBudgetView()
         case .ieee754:
             IEEE754View()
         case .modbusRegisters:
@@ -145,6 +149,8 @@ struct ToolDestination: View {
             RTDView()
         case .thermocouples:
             ThermocoupleView()
+        case .unitConverter:
+            UnitConverterView()
         case .pidTuning:
             PIDTuningView()
         case .ipRating:

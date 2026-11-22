@@ -44,13 +44,16 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
     case ohmsLaw
     case wireColors
     case breakers
+    case motor
     case signalScaling
+    case loopBudget
     case ieee754
     case modbusRegisters
     case modbusAddresses
     case modbusResponse
     case rtd
     case thermocouples
+    case unitConverter
     case pidTuning
     case ipRating
     case networkCalc
@@ -61,8 +64,8 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
 
     var category: ToolCategory {
         switch self {
-        case .cableSizing, .voltageDrop, .ohmsLaw, .wireColors, .breakers: .electrical
-        case .signalScaling, .ieee754, .modbusRegisters, .modbusAddresses, .modbusResponse, .rtd, .thermocouples: .automation
+        case .cableSizing, .voltageDrop, .ohmsLaw, .wireColors, .breakers, .motor: .electrical
+        case .signalScaling, .loopBudget, .ieee754, .modbusRegisters, .modbusAddresses, .modbusResponse, .rtd, .thermocouples, .unitConverter: .automation
         case .pidTuning, .ipRating, .networkCalc: .design
         case .commissioningChecklist, .notebook: .field
         }
@@ -78,13 +81,16 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ohmsLaw: "Закон Ома и мощность"
         case .wireColors: "Маркировка проводов"
         case .breakers: "Автоматы B / C / D"
+        case .motor: "Двигатель и частотник"
         case .signalScaling: "Конвертер сигналов"
+        case .loopBudget: "Нагрузка контура 4–20 мА"
         case .ieee754: "IEEE 754 / Float"
         case .modbusRegisters: "Регистры Modbus"
         case .modbusAddresses: "Адреса Modbus"
         case .modbusResponse: "Разбор кадра Modbus"
         case .rtd: "Термосопротивления"
         case .thermocouples: "Термопары"
+        case .unitConverter: "Конвертер единиц"
         case .pidTuning: "Настройка ПИД"
         case .ipRating: "Степень защиты IP"
         case .networkCalc: "IP-калькулятор сетей"
@@ -100,13 +106,16 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ohmsLaw: "U, I, R, P; P, Q, S, cos φ; КРМ"
         case .wireColors: "PE, N, PEN, L1–L3, DC — цвета и обозначения"
         case .breakers: "Кратности расцепления, петля фаза–ноль"
+        case .motor: "Iн, пусковой ток, автомат, обороты от частоты"
         case .signalScaling: "4–20 мА, 0–10 В ↔ величина ↔ код АЦП"
+        case .loopBudget: "Хватит ли питания: БП, линия, барьер, HART"
         case .ieee754: "Float ↔ HEX ↔ регистры, порядок байт"
         case .modbusRegisters: "INT16…FLOAT64, порядок слов, адресация 4xxxx"
         case .modbusAddresses: "4xxxx ↔ DEC ↔ HEX ↔ %MW, кадр RTU/TCP с CRC"
         case .modbusResponse: "HEX-кадр RTU/TCP → CRC, коды ошибок, значения"
         case .rtd: "Pt100, Pt1000, 100П, 50М: R ↔ t, таблицы"
         case .thermocouples: "ТХА (K): мВ ↔ °C, холодный спай"
+        case .unitConverter: "Давление, температура, расход, мощность"
         case .pidTuning: "Циглер–Николс, Коэн–Кун, SIMC, Тайреус–Люйбен"
         case .ipRating: "Расшифровка IPxx, ГОСТ 14254-2015"
         case .networkCalc: "Подсети, проверка ПЛК ↔ панель, порты протоколов"
@@ -122,13 +131,16 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .ohmsLaw: "function"
         case .wireColors: "paintpalette"
         case .breakers: "switch.2"
+        case .motor: "fanblades"
         case .signalScaling: "gauge.with.dots.needle.50percent"
+        case .loopBudget: "powerplug"
         case .ieee754: "memorychip"
         case .modbusRegisters: "square.grid.3x2"
         case .modbusAddresses: "number.square"
         case .modbusResponse: "text.magnifyingglass"
         case .rtd: "thermometer.medium"
         case .thermocouples: "flame"
+        case .unitConverter: "arrow.left.arrow.right"
         case .pidTuning: "point.topleft.down.to.point.bottomright.curvepath"
         case .ipRating: "shield.lefthalf.filled"
         case .networkCalc: "network"
@@ -154,6 +166,9 @@ enum Tool: String, CaseIterable, Identifiable, Hashable {
         case .networkCalc: ["маска", "ethernet", "profinet", "tcp", "подсет", "ip", "шлюз", "порт", "502", "cidr"]
         case .pidTuning: ["пид", "pid", "регулятор", "циглер", "kp", "ti", "td", "разгон", "xp"]
         case .ohmsLaw: ["ом", "мощност", "cos", "квар", "крм", "реактив", "напряжен"]
+        case .motor: ["двигател", "мотор", "чрп", "частотник", "пусков", "обороты", "квт", "насос"]
+        case .loopBudget: ["контур", "питани", "барьер", "hart", "нагрузк", "шунт", "250", "24 в"]
+        case .unitConverter: ["бар", "мпа", "кгс", "psi", "расход", "м3", "единиц", "давлен", "квт", "л.с."]
         case .commissioningChecklist: ["пнр", "loop", "изоляц", "мегаомметр", "di", "do", "протокол"]
         default: []
         }
