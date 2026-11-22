@@ -21,6 +21,7 @@ let package = Package(
                 "Features/Checklist/ChecklistReport.swift",
                 "Features/Modbus/ModbusCodec.swift",
                 "Features/Sensors/RTD.swift",
+                "Features/Network/IPv4.swift",
             ]
         ),
         .testTarget(

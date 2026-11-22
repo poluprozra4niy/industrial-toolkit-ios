@@ -133,6 +133,8 @@ struct ToolDestination: View {
             ModbusRegistersView()
         case .rtd:
             RTDView()
+        case .networkCalc:
+            IPCalculatorView()
         case .commissioningChecklist:
             ChecklistListView()
         case .notebook:
